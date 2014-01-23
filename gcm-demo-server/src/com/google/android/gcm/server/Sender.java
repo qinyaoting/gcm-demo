@@ -157,8 +157,7 @@ public class Sender {
       }
     } while (tryAgain);
     if (result == null) {
-      throw new IOException("Could not send message after " + attempt +
-          " attempts");
+      throw new IOException("Could not send message after " + attempt + " attempts");
     }
     return result;
   }
@@ -684,6 +683,7 @@ public class Sender {
     }
   }
 
+  //判断参数是否为空，为空抛出异常
   static <T> T nonNull(T argument) {
     if (argument == null) {
       throw new IllegalArgumentException("argument cannot be null");

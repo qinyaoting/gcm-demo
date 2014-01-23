@@ -56,6 +56,7 @@ import java.util.Map;
  *    .build();
  * </pre></code>
  */
+//实现序列化 public final 类
 public final class Message implements Serializable {
 
   private final String collapseKey;
@@ -65,6 +66,7 @@ public final class Message implements Serializable {
   private final Boolean dryRun;
   private final String restrictedPackageName;
 
+  //Builder帮助类 public static final
   public static final class Builder {
 
     private final Map<String, String> data;
@@ -77,6 +79,7 @@ public final class Message implements Serializable {
     private String restrictedPackageName;
 
     public Builder() {
+    	//构造方法，会创建LinkedHashMap
       this.data = new LinkedHashMap<String, String>();
     }
 
@@ -128,6 +131,7 @@ public final class Message implements Serializable {
       return this;
     }
 
+    // 返回一个Message()对象
     public Message build() {
       return new Message(this);
     }
