@@ -102,6 +102,7 @@ public class Sender {
    * @param key API key obtained through the Google API Console.
    */
   public Sender(String key) {
+	  //调用两个参数的构造方法
     this(key, GCM_SEND_ENDPOINT);
   }
 
@@ -112,6 +113,7 @@ public class Sender {
    * @param gcmSendEndpoint url of the GCM Server. Comes in handy when using a mock server.
    */
   public Sender(String key, String gcmSendEndpoint) {
+	  //如果验证为空，会抛异常
     this.key = nonNull(key);
     this.gcmSendEndpoint = nonNull(gcmSendEndpoint);
   }
@@ -141,21 +143,26 @@ public class Sender {
     int backoff = BACKOFF_INITIAL_DELAY;
     boolean tryAgain;
     do {
+    	//计数器
       attempt++;
       if (logger.isLoggable(Level.FINE)) {
         logger.fine("Attempt #" + attempt + " to send message " +
             message + " to regIds " + registrationId);
       }
       result = sendNoRetry(message, registrationId);
+      // result != null
+      // result == null 并且attemt小于等于重试次数，需要重试
       tryAgain = result == null && attempt <= retries;
       if (tryAgain) {
         int sleepTime = backoff / 2 + random.nextInt(backoff);
+        // 线程休息
         sleep(sleepTime);
         if (2 * backoff < MAX_BACKOFF_DELAY) {
           backoff *= 2;
         }
       }
-    } while (tryAgain);
+    } while (tryAgain); //tryagain为true时，会一直循环
+    // resutl 为空会抛出异常
     if (result == null) {
       throw new IOException("Could not send message after " + attempt + " attempts");
     }
@@ -172,9 +179,9 @@ public class Sender {
    * @throws InvalidRequestException if GCM didn't returned a 200 or 5xx status.
    * @throws IllegalArgumentException if registrationId is {@literal null}.
    */
-  public Result sendNoRetry(Message message, String registrationId)
-      throws IOException {
+  public Result sendNoRetry(Message message, String registrationId) throws IOException {
     StringBuilder body = newBody(PARAM_REGISTRATION_ID, registrationId);
+    //追加参数
     Boolean delayWhileIdle = message.isDelayWhileIdle();
     if (delayWhileIdle != null) {
       addParameter(body, PARAM_DELAY_WHILE_IDLE, delayWhileIdle ? "1" : "0");
@@ -195,6 +202,7 @@ public class Sender {
     if (timeToLive != null) {
       addParameter(body, PARAM_TIME_TO_LIVE, Integer.toString(timeToLive));
     }
+    // 处理message里的参数
     for (Entry<String, String> entry : message.getData().entrySet()) {
       String key = entry.getKey();
       String value = entry.getValue();
@@ -202,6 +210,7 @@ public class Sender {
         logger.warning("Ignoring payload entry thas has null: " + entry);
       } else {
         key = PARAM_PAYLOAD_PREFIX + key;
+        // 编码
         addParameter(body, key, URLEncoder.encode(value, UTF8));
       }
     }
@@ -295,8 +304,7 @@ public class Sender {
    * @throws InvalidRequestException if GCM didn't returned a 200 or 503 status.
    * @throws IOException if message could not be sent.
    */
-  public MulticastResult send(Message message, List<String> regIds, int retries)
-      throws IOException {
+  public MulticastResult send(Message message, List<String> regIds, int retries) throws IOException {
     int attempt = 0;
     MulticastResult multicastResult;
     int backoff = BACKOFF_INITIAL_DELAY;
@@ -410,17 +418,16 @@ public class Sender {
    * @throws InvalidRequestException if GCM didn't returned a 200 status.
    * @throws IOException if there was a JSON parsing error
    */
-  public MulticastResult sendNoRetry(Message message,
-      List<String> registrationIds) throws IOException {
+  public MulticastResult sendNoRetry(Message message, List<String> registrationIds) throws IOException {
     if (nonNull(registrationIds).isEmpty()) {
       throw new IllegalArgumentException("registrationIds cannot be empty");
     }
     Map<Object, Object> jsonRequest = new HashMap<Object, Object>();
+    // 把值放到jsonRequest里
     setJsonField(jsonRequest, PARAM_TIME_TO_LIVE, message.getTimeToLive());
     setJsonField(jsonRequest, PARAM_COLLAPSE_KEY, message.getCollapseKey());
     setJsonField(jsonRequest, PARAM_RESTRICTED_PACKAGE_NAME, message.getRestrictedPackageName());
-    setJsonField(jsonRequest, PARAM_DELAY_WHILE_IDLE,
-        message.isDelayWhileIdle());
+    setJsonField(jsonRequest, PARAM_DELAY_WHILE_IDLE, message.isDelayWhileIdle());
     setJsonField(jsonRequest, PARAM_DRY_RUN, message.isDryRun());
     jsonRequest.put(JSON_REGISTRATION_IDS, registrationIds);
     Map<String, String> payload = message.getData();
@@ -439,6 +446,7 @@ public class Sender {
       return null;
     }
     String responseBody;
+    //不是200
     if (status != 200) {
       try {
         responseBody = getAndClose(conn.getErrorStream());
@@ -451,6 +459,7 @@ public class Sender {
       }
       throw new InvalidRequestException(status, responseBody);
     }
+    //200
     try {
       responseBody = getAndClose(conn.getInputStream());
     } catch(IOException e) {
@@ -461,11 +470,14 @@ public class Sender {
     JSONParser parser = new JSONParser();
     JSONObject jsonResponse;
     try {
+    	//parse结果
       jsonResponse = (JSONObject) parser.parse(responseBody);
+      // Number - > int
       int success = getNumber(jsonResponse, JSON_SUCCESS).intValue();
       int failure = getNumber(jsonResponse, JSON_FAILURE).intValue();
       int canonicalIds = getNumber(jsonResponse, JSON_CANONICAL_IDS).intValue();
       long multicastId = getNumber(jsonResponse, JSON_MULTICAST_ID).longValue();
+      //new一个MulticastResutl
       MulticastResult.Builder builder = new MulticastResult.Builder(success,
           failure, canonicalIds, multicastId);
       @SuppressWarnings("unchecked")
@@ -516,22 +528,25 @@ public class Sender {
   /**
    * Sets a JSON field, but only if the value is not {@literal null}.
    */
-  private void setJsonField(Map<Object, Object> json, String field,
-      Object value) {
+  private void setJsonField(Map<Object, Object> json, String field, Object value) {
     if (value != null) {
       json.put(field, value);
     }
   }
 
   private Number getNumber(Map<?, ?> json, String field) {
+	  //map 里取值
     Object value = json.get(field);
+    //为空，抛异常
     if (value == null) {
       throw new CustomParserException("Missing field: " + field);
     }
+    //不是Number抛异常
     if (!(value instanceof Number)) {
       throw new CustomParserException("Field " + field +
           " does not contain a number: " + value);
     }
+    //正常，返回转换后的值
     return (Number) value;
   }
 
@@ -554,8 +569,7 @@ public class Sender {
    *
    * @return HTTP response.
    */
-  protected HttpURLConnection post(String url, String body)
-      throws IOException {
+  protected HttpURLConnection post(String url, String body) throws IOException {
     return post(url, "application/x-www-form-urlencoded;charset=UTF-8", body);
   }
 
@@ -574,8 +588,8 @@ public class Sender {
    *
    * @throws IOException propagated from underlying methods.
    */
-  protected HttpURLConnection post(String url, String contentType, String body)
-      throws IOException {
+  protected HttpURLConnection post(String url, String contentType, String body) throws IOException {
+	  //如果为空抛出IllegalArgumentException异常
     if (url == null || body == null) {
       throw new IllegalArgumentException("arguments cannot be null");
     }
@@ -629,8 +643,7 @@ public class Sender {
    * @param name parameter's name.
    * @param value parameter's value.
    */
-  protected static void addParameter(StringBuilder body, String name,
-      String value) {
+  protected static void addParameter(StringBuilder body, String name, String value) {
     nonNull(body).append('&')
         .append(nonNull(name)).append('=').append(nonNull(value));
   }
