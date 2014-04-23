@@ -80,6 +80,7 @@ public class SendAllMessagesServlet extends BaseServlet {
       if (devices.size() == 1) {
         // send a single message using plain post
         String registrationId = devices.get(0);
+        // 什么时候使用帮助类
         Message message = new Message.Builder().build();
         Result result = sender.send(message, registrationId, 5);
         status = "Sent message to one device: " + result;

@@ -35,6 +35,7 @@ public class UnregisterServlet extends BaseServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException {
+	  // 如果为regId为空是会抛异常的
     String regId = getParameter(req, PARAMETER_REG_ID);
     Datastore.unregister(regId);
     setSuccess(resp);
