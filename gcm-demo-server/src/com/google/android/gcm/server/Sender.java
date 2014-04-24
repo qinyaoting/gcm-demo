@@ -154,6 +154,7 @@ public class Sender {
       // result == null 并且attemt小于等于重试次数，需要重试
       tryAgain = result == null && attempt <= retries;
       if (tryAgain) {
+    	  // 毛意思
         int sleepTime = backoff / 2 + random.nextInt(backoff);
         // 线程休息
         sleep(sleepTime);
@@ -219,14 +220,18 @@ public class Sender {
     HttpURLConnection conn;
     int status;
     try {
+    	// 返回conn
       conn = post(gcmSendEndpoint, requestBody);
+      // 从conn中过得status
       status = conn.getResponseCode();
     } catch (IOException e) {
       logger.log(Level.FINE, "IOException posting to GCM", e);
+      // post中出错返回null
       return null;
     }
     if (status / 100 == 5) {
       logger.fine("GCM service is unavailable (status " + status + ")");
+      // 如果status 大于500，返回null
       return null;
     }
     String responseBody;
@@ -240,8 +245,10 @@ public class Sender {
         responseBody = "N/A";
         logger.log(Level.FINE, "Exception reading response: ", e);
       }
+      // 抛出异常
       throw new InvalidRequestException(status, responseBody);
     } else {
+    	//status=200 ok
       try {
         responseBody = getAndClose(conn.getInputStream());
       } catch (IOException e) {
