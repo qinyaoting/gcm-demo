@@ -50,7 +50,7 @@ public class SendAllMessagesServlet extends BaseServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
-    //初始化sender
+    //初始化sender，吧config传过去
     sender = newSender(config);
   }
 
@@ -58,7 +58,7 @@ public class SendAllMessagesServlet extends BaseServlet {
    * Creates the {@link Sender} based on the servlet settings.
    */
   protected Sender newSender(ServletConfig config) {
-	  //从	/classes/api.key取出
+	  //从ServletConfig -> context	/classes/api.key取出
     String key = (String) config.getServletContext()
         .getAttribute(ApiKeyInitializer.ATTRIBUTE_ACCESS_KEY);
     return new Sender(key);
@@ -82,7 +82,7 @@ public class SendAllMessagesServlet extends BaseServlet {
         String registrationId = devices.get(0);
         // 什么时候使用帮助类
         Message message = new Message.Builder().build();
-        // 向一个设备发，失败重试5次，会阻塞？
+        // 向一个设备发，失败重试5次，会阻塞？ send()方法接受三个参数 message regid try
         Result result = sender.send(message, registrationId, 5);
         status = "Sent message to one device: " + result;
       } else {

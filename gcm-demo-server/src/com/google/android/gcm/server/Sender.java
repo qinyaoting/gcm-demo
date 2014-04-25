@@ -156,9 +156,17 @@ public class Sender {
       if (tryAgain) {
     	  // 毛意思
         int sleepTime = backoff / 2 + random.nextInt(backoff);
+        /**
+         * backoff 会 *2 sleep的时间会越来越长
+         * 500~1500			随机一个
+         * 1000~3000		随机一个
+         * 2000~6000		随机一个    
+         * 4000~12000		随机一个    
+         */
         // 线程休息
         sleep(sleepTime);
         if (2 * backoff < MAX_BACKOFF_DELAY) {
+        	// 小于最大边界就乘2
           backoff *= 2;
         }
       }
@@ -166,6 +174,7 @@ public class Sender {
     // resutl 为空会抛出异常
     if (result == null) {
       throw new IOException("Could not send message after " + attempt + " attempts");
+      // 抛出IOException
     }
     return result;
   }
@@ -180,7 +189,7 @@ public class Sender {
    * @throws InvalidRequestException if GCM didn't returned a 200 or 5xx status.
    * @throws IllegalArgumentException if registrationId is {@literal null}.
    */
-  public Result sendNoRetry(Message message, String registrationId) throws IOException {
+  public Result sendNoRetry(Message message, String registrationId) throws IOException {	// 也抛出IOException
     StringBuilder body = newBody(PARAM_REGISTRATION_ID, registrationId);
     //追加参数
     Boolean delayWhileIdle = message.isDelayWhileIdle();
@@ -640,6 +649,8 @@ public class Sender {
    * @return StringBuilder to be used an HTTP POST body.
    */
   protected static StringBuilder newBody(String name, String value) {
+	  
+	  // 返回一个StringBuilder 为毛这个方法没有声明一场那
     return new StringBuilder(nonNull(name)).append('=').append(nonNull(value));
   }
 

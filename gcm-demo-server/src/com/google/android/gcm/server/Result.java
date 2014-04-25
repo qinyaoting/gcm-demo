@@ -43,12 +43,15 @@ import java.io.Serializable;
  *         - otherwise, update the server datastore with the new id.
  * </pre>
  */
+
+// 0425 final类 实现 Serializable
 public final class Result implements Serializable {
 
   private final String messageId;
   private final String canonicalRegistrationId;
   private final String errorCode;
 
+  //0425 public static final的内部类
   public static final class Builder {
 
     // optional parameters
@@ -71,6 +74,7 @@ public final class Result implements Serializable {
       return this;
     }
 
+    // 0425 build()方法返回一个Result对象,这个对象是用Builder对象构造的
     public Result build() {
       return new Result(this);
     }
