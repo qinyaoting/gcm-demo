@@ -41,6 +41,7 @@ public class ApiKeyInitializer implements ServletContextListener {
   public void contextInitialized(ServletContextEvent event) {
     logger.info("Reading " + PATH + " from resources (probably from " + "WEB-INF/classes");
     String key = getKey();
+    // 放到ServletContext里
     event.getServletContext().setAttribute(ATTRIBUTE_ACCESS_KEY, key);
   }
 
@@ -51,6 +52,7 @@ public class ApiKeyInitializer implements ServletContextListener {
 	  //当前线程得到ClassLoader，然后得到InputStream
 	InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PATH);
 	if (stream == null) {
+	  // 抛异常
 	  throw new IllegalStateException("Could not find file " + PATH + " on web resources)");
 	}
     

@@ -55,7 +55,7 @@ public final class Constants {
   /**
    * Prefix to HTTP parameter used to pass key-values in the message payload.
    */
-  public static final String PARAM_PAYLOAD_PREFIX = "data.";
+  public static final String PARAM_PAYLOAD_PREFIX = "data.";	//20140429定义参数前缀
 
   /**
    * Prefix to HTTP parameter used to set the message time-to-live.

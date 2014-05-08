@@ -338,6 +338,7 @@ public class Sender {
             message + " to regIds " + unsentRegIds);
       }
       try {
+    	  // 20140429 向一个集合里发
         multicastResult = sendNoRetry(message, unsentRegIds);
       } catch(IOException e) {
         // no need for WARNING since exception might be already logged

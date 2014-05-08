@@ -102,8 +102,7 @@ public class SendAllMessagesServlet extends BaseServlet {
             tasks++;
           }
         }
-        status = "Asynchronously sending " + tasks + " multicast messages to " +
-            total + " devices";
+        status = "Asynchronously sending " + tasks + " multicast messages to " + total + " devices";
       }
     }
     // 传递发送状态给home页面
@@ -132,8 +131,7 @@ public class SendAllMessagesServlet extends BaseServlet {
           Result result = results.get(i);
           String messageId = result.getMessageId();
           if (messageId != null) {
-            logger.fine("Succesfully sent message to device: " + regId +
-                "; messageId = " + messageId);
+            logger.fine("Succesfully sent message to device: " + regId + "; messageId = " + messageId);
             String canonicalRegId = result.getCanonicalRegistrationId();
             if (canonicalRegId != null) {
               // same device has more than on registration id: update it
