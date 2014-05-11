@@ -94,6 +94,7 @@ abstract class BaseServlet extends HttpServlet {
   }
 
   protected boolean isEmptyOrNull(String value) {
+	  // 如果是null，返回true；如果不为null，去掉空格，长度是0，返回true
     return value == null || value.trim().length() == 0;
   }
 

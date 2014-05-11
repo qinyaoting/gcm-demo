@@ -52,7 +52,7 @@ public class ApiKeyInitializer implements ServletContextListener {
 	  //当前线程得到ClassLoader，然后得到InputStream
 	InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PATH);
 	if (stream == null) {
-	  // 抛异常
+	  // 抛异常 getKey() 方法后并没有声明抛出
 	  throw new IllegalStateException("Could not find file " + PATH + " on web resources)");
 	}
     
@@ -62,6 +62,7 @@ public class ApiKeyInitializer implements ServletContextListener {
       String key = reader.readLine();
       return key;
     } catch (IOException e) {
+    	// 抛运行时异常
       throw new RuntimeException("Could not read file " + PATH, e);
     } finally {
       try {

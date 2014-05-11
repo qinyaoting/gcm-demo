@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class HomeServlet extends BaseServlet {
 
-  static final String ATTRIBUTE_STATUS = "status";
+  static final String ATTRIBUTE_STATUS = "status";	// 定义参数 ATTRIBUTE_STATUS
 
   /**
    * Displays the existing messages and offer the option to send a new one.

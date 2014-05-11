@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class RegisterServlet extends BaseServlet {
 
-  private static final String PARAMETER_REG_ID = "regId";
+  private static final String PARAMETER_REG_ID = "regId";	// 定义参数 PARAMETER_REG_ID
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)

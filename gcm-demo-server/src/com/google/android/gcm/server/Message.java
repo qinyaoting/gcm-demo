@@ -59,6 +59,7 @@ import java.util.Map;
 //实现序列化 public final 类
 public final class Message implements Serializable {
 
+	// 属性都是final的
   private final String collapseKey;
   private final Boolean delayWhileIdle;
   private final Integer timeToLive;
@@ -79,7 +80,7 @@ public final class Message implements Serializable {
     private String restrictedPackageName;
 
     public Builder() {
-    	//构造方法，会创建LinkedHashMap
+    	//执行Builder构造方法，会创建LinkedHashMap
       this.data = new LinkedHashMap<String, String>();
     }
 
@@ -131,14 +132,15 @@ public final class Message implements Serializable {
       return this;
     }
 
-    // 返回一个Message()对象
+    // 返回一个Message对象
     public Message build() {
-      return new Message(this);
+      return new Message(this);		// 	this是Builder对象
     }
 
   }
 
   private Message(Builder builder) {
+	  // 	把builder的值付给message里的属性
     collapseKey = builder.collapseKey;
     delayWhileIdle = builder.delayWhileIdle;
     data = Collections.unmodifiableMap(builder.data);

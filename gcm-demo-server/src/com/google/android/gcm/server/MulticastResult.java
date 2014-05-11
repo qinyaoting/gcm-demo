@@ -73,7 +73,7 @@ public final class MulticastResult implements Serializable {
     failure = builder.failure;
     canonicalIds = builder.canonicalIds;
     multicastId = builder.multicastId;
-    results = Collections.unmodifiableList(builder.results);
+    results = Collections.unmodifiableList(builder.results);	// 	不可变集合
     List<Long> tmpList = builder.retryMulticastIds;
     if (tmpList == null) {
       tmpList = Collections.emptyList();

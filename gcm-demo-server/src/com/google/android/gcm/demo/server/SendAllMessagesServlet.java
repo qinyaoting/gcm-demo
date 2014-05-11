@@ -138,9 +138,11 @@ public class SendAllMessagesServlet extends BaseServlet {
               logger.info("canonicalRegId " + canonicalRegId);
               Datastore.updateRegistration(regId, canonicalRegId);
             }
-          } else {
+          } 
+          // message id为空，意为着发送失败
+          else {
             String error = result.getErrorCodeName();
-            if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
+            if (error.equals(Constants.ERROR_NOT_REGISTERED)) {		// 	比较错误类型，错误类型定义在constants
               // application has been removed from device - unregister it
               logger.info("Unregistered device: " + regId);
               Datastore.unregister(regId);
