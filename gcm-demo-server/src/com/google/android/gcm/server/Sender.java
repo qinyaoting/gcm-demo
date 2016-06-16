@@ -174,7 +174,7 @@ public class Sender {
     // resutl 为空会抛出异常
     if (result == null) {
       throw new IOException("Could not send message after " + attempt + " attempts");
-      // 抛出IOException
+      // 抛出IOException,受检异常,调用者根据异常进行对应处理??
     }
     return result;
   }
@@ -651,7 +651,7 @@ public class Sender {
    */
   protected static StringBuilder newBody(String name, String value) {
 	  
-	  // 返回一个StringBuilder 为毛这个方法没有声明一场那
+	  // 返回一个StringBuilder 为毛这个方法没有声明一场那!!!运行时异常
     return new StringBuilder(nonNull(name)).append('=').append(nonNull(value));
   }
 

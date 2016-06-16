@@ -37,7 +37,7 @@ public class RegisterServlet extends BaseServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException {
 	// 如果为regId为空是会抛异常的
-    String regId = getParameter(req, PARAMETER_REG_ID);
+    String regId = getParameter(req, PARAMETER_REG_ID);     //这个方法抛ServletException doPost也抛
     Datastore.register(regId);
     setSuccess(resp);
   }

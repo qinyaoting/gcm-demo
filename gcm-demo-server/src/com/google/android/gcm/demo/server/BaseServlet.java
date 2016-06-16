@@ -49,7 +49,7 @@ abstract class BaseServlet extends HttpServlet {
 
   //0.在父类中处理参数
   protected String getParameter(HttpServletRequest req, String parameter)
-      throws ServletException {
+      throws ServletException {     //B22
     String value = req.getParameter(parameter);
     //如果为空,抛出异常
     if (isEmptyOrNull(value)) {
@@ -65,7 +65,7 @@ abstract class BaseServlet extends HttpServlet {
         }
         logger.fine("parameters: " + parameters);
       }
-      throw new ServletException("Parameter " + parameter + " not found");
+      throw new ServletException("Parameter " + parameter + " not found"); //B22
     }
     //否则返回值
     return value.trim();

@@ -33,7 +33,7 @@ public final class Datastore {
 
   private Datastore() {
     throw new UnsupportedOperationException();
-  }
+  }     //如果new会抛出
 
   /**
    * Registers a device.

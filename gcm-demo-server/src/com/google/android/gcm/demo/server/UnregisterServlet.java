@@ -34,9 +34,14 @@ public class UnregisterServlet extends BaseServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException {
+      throws ServletException {             //B24  doPost会抛到显示层
 	  // 如果为regId为空是会抛异常的
-    String regId = getParameter(req, PARAMETER_REG_ID);
+      // B21 取出参数
+      // 保存起来
+      // 返回
+
+
+    String regId = getParameter(req, PARAMETER_REG_ID);     //B23 该方法会判断,参数是否为空,抛出ServletException
     Datastore.unregister(regId);
     setSuccess(resp);
   }
